@@ -13,11 +13,11 @@ StudentPreference::StudentPreference(Student* student, AcademicClass** preferenc
     this->student = student;
 }
 
-Student* StudentPreference::getStudent () {
+Student* StudentPreference::getStudent() const {
     return this->student;
 }
 
-AcademicClass* StudentPreference::getPreference(int num) {
+AcademicClass* StudentPreference::getPreference(int num) const {
     if (num > numPreferences - 1 || num < 0) {
         std::cout << "Invalid preference number " << num << std::endl;
     }

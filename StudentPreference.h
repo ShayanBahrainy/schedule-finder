@@ -6,8 +6,8 @@
 class StudentPreference {
     public:
         StudentPreference(Student* student, AcademicClass** preferenceList, int numPreferences);
-        Student* getStudent();
-        AcademicClass* getPreference(int num);
+        Student* getStudent() const;
+        AcademicClass* getPreference(int num) const;
     private:
         AcademicClass** preferenceList;
         Student* student;

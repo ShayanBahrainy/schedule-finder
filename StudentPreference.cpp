@@ -23,3 +23,18 @@ AcademicClass* StudentPreference::getPreference(int num) const {
     }
     return this->preferenceList[num];
 }
+
+bool StudentPreference::contains(const AcademicClass academicClass) const {
+    for (int i = 0; i < numPreferences; ++i) {
+        //std::cout << preferenceList[i]->getName() << " =? " << academicClass.getName() << " ";
+        if (*preferenceList[i] == academicClass) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+int StudentPreference::getPreferenceCount() const {
+    return numPreferences;
+}

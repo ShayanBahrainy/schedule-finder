@@ -1,13 +1,19 @@
+#include <ctime>
 #include <iostream>
 #include <fstream>
+#include <limits>
 #include <vector>
 
 #include "AcademicClass.h"
 #include "StudentPreference.h"
 #include "Student.h"
+#include "Schedule.h"
+#include "generate_schedule.h"
 
 std::vector<AcademicClass> loadClasses(const std::string path) {
-    std::ifstream classInputFile(path);
+    std::ifstream classInputFile;
+
+    classInputFile.open(path);
 
     std::vector<AcademicClass> classes;
 
@@ -33,7 +39,11 @@ std::vector<AcademicClass> loadClasses(const std::string path) {
 }
 
 std::vector<StudentPreference> loadStudents(const std::string path, std::vector<AcademicClass>& academicClasses) {
-    std::ifstream studentInputFile(path);
+    const int NUM_PREFERENCES = 7;
+
+    std::ifstream studentInputFile;
+
+    studentInputFile.open(path);
 
     std::vector<StudentPreference> preferences;
 
@@ -41,18 +51,17 @@ std::vector<StudentPreference> loadStudents(const std::string path, std::vector<
         std::cout << "Failed to open file " << path << std::endl;
     }
 
-    while (studentInputFile.good()) {
-        std::string studentName;
-        studentInputFile >> studentName;
 
+    std::string studentName;
+    while (studentInputFile >> studentName) {
         int grade;
         studentInputFile >> grade;
 
         Student* student = new Student(studentName, grade);
 
-        AcademicClass* classPreferences[5];
+        AcademicClass* classPreferences[NUM_PREFERENCES];
 
-        for (int i = 0; i < 5; ++i ){
+        for (int i = 0; i < NUM_PREFERENCES; ++i ){
             std::string className;
             studentInputFile >> className;
             for (AcademicClass& a : academicClasses) {
@@ -64,11 +73,11 @@ std::vector<StudentPreference> loadStudents(const std::string path, std::vector<
 
         }
 
-        preferences.push_back(StudentPreference(student, classPreferences, 5));
+        preferences.push_back(StudentPreference(student, classPreferences, NUM_PREFERENCES));
     }
 
-    if (!studentInputFile.eof()) {
-        std::cout << "Error reading file " << path << std::endl;
+    if (studentInputFile.bad()) {
+        std::cout << "Error reading file " << path <<  " with error " << studentInputFile.badbit << std::endl;
     }
 
     studentInputFile.close();
@@ -77,19 +86,28 @@ std::vector<StudentPreference> loadStudents(const std::string path, std::vector<
 }
 
 int main() {
+    srand(time(nullptr));
 
-    std::vector<AcademicClass> aClasses = loadClasses("Classes.txt");
+    std::vector<AcademicClass> academicClasses = loadClasses("Classes.txt");
 
-    std::vector<StudentPreference> studentPrefs = loadStudents("Students.txt", aClasses);
+    std::vector<StudentPreference> studentPrefs = loadStudents("Students.txt", academicClasses);
 
-    for (auto& stuPref : studentPrefs) {
-        Student* student = stuPref.getStudent();
-        std::cout << student->getName() << ", grade " << student->getGrade() << " wants to be in ";
-        for (int i = 0; i < 4; ++i) {
-            std::cout << stuPref.getPreference(i)->getName() << ", ";
+
+    Schedule* minSchedule = generateRandomSchedule(academicClasses, 9);
+    int maxScore = std::numeric_limits<int>::max();
+    for (int i = 0; i < 10; ++i) {
+        Schedule* schedule = generateRandomSchedule(academicClasses, 9);
+        int score = schedule->score(studentPrefs);
+        if (score < maxScore) {
+            maxScore = score;
+            minSchedule = schedule;
         }
-        std::cout << "and, " << stuPref.getPreference(4)->getName() << "." << std::endl;
+        else {
+            delete schedule;
+        }
     }
+    std::cout << "Here is a schedule I found: " << *minSchedule << std::endl;
 
+    std::cout << "And it has a score of " << minSchedule->score(studentPrefs) << std::endl;
     return 0;
 }

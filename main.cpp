@@ -10,12 +10,12 @@
 #include "Schedule.h"
 #include "generate_schedule.h"
 
-std::vector<AcademicClass> loadClasses(const std::string path) {
+std::vector<AcademicClass*> loadClasses(const std::string path) {
     std::ifstream classInputFile;
 
     classInputFile.open(path);
 
-    std::vector<AcademicClass> classes;
+    std::vector<AcademicClass*> classes;
 
     if (!classInputFile.is_open()) {
         std::cout << "Failed to open file " << path << std::endl;
@@ -25,7 +25,7 @@ std::vector<AcademicClass> loadClasses(const std::string path) {
         std::string className;
         classInputFile >> className;
 
-        classes.push_back(AcademicClass(className));
+        classes.push_back(new AcademicClass(className));
     }
 
     if (!classInputFile.eof()) {
@@ -38,9 +38,7 @@ std::vector<AcademicClass> loadClasses(const std::string path) {
 
 }
 
-std::vector<StudentPreference> loadStudents(const std::string path, std::vector<AcademicClass>& academicClasses) {
-    const int NUM_PREFERENCES = 7;
-
+std::vector<StudentPreference> loadPreferences(const std::string path, std::vector<AcademicClass*>& academicClasses) {
     std::ifstream studentInputFile;
 
     studentInputFile.open(path);
@@ -51,6 +49,9 @@ std::vector<StudentPreference> loadStudents(const std::string path, std::vector<
         std::cout << "Failed to open file " << path << std::endl;
     }
 
+    int NUM_PREFS;
+    studentInputFile >> NUM_PREFS;
+
 
     std::string studentName;
     while (studentInputFile >> studentName) {
@@ -59,21 +60,21 @@ std::vector<StudentPreference> loadStudents(const std::string path, std::vector<
 
         Student* student = new Student(studentName, grade);
 
-        AcademicClass* classPreferences[NUM_PREFERENCES];
+        std::vector<AcademicClass*> classPreferences(NUM_PREFS, nullptr);
 
-        for (int i = 0; i < NUM_PREFERENCES; ++i ){
+        for (int i = 0; i < NUM_PREFS; ++i ){
             std::string className;
             studentInputFile >> className;
-            for (AcademicClass& a : academicClasses) {
-                if (a.getName() == className) {
-                    classPreferences[i] = &a;
+            for (AcademicClass* a : academicClasses) {
+                if (a->getName() == className) {
+                    classPreferences[i] = a;
                     break;
                 }
             }
 
         }
 
-        preferences.push_back(StudentPreference(student, classPreferences, NUM_PREFERENCES));
+        preferences.push_back(StudentPreference(student, classPreferences));
     }
 
     if (studentInputFile.bad()) {
@@ -87,10 +88,9 @@ std::vector<StudentPreference> loadStudents(const std::string path, std::vector<
 
 int main() {
     srand(time(nullptr));
+    std::vector<AcademicClass*> academicClasses = loadClasses("Classes.txt");
 
-    std::vector<AcademicClass> academicClasses = loadClasses("Classes.txt");
-
-    std::vector<StudentPreference> studentPrefs = loadStudents("Students.txt", academicClasses);
+    std::vector<StudentPreference> studentPrefs = loadPreferences("Preferences.txt", academicClasses);
 
 
     Schedule* minSchedule = generateRandomSchedule(academicClasses, 9);

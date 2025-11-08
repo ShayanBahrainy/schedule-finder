@@ -2,9 +2,9 @@ CXX = g++
 CXXFLAGS = -std=c++20 -Wall -Wextra -O2 -g
 
 SRC = $(wildcard *.cpp)
-SRC := $(filter-out generate_test_preferences.cpp, $(SRC))
+SRC := $(filter-out generate_test_data.cpp, $(SRC))
 
-TEST_SRC = generate_test_preferences.cpp
+TEST_SRC = generate_test_data.cpp
 
 BIN = app
 TEST_BIN = test_data

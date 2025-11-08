@@ -1,0 +1,11 @@
+7
+Alvaro 60 H B C J A I E 
+Adeline 28 A K C M N L I 
+Alexander 100 N A G O K D I 
+Anamaria -85 M D N C P L K 
+Alexandria -37 C H M B P I O 
+Alpha -33 L P C D A J O 
+Aisha 63 N L E A D J C 
+David -94 K A D N G M J 
+Agatha -61 P E O I K A L 
+Angele 13 M N J L A H C 

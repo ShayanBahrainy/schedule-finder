@@ -9,20 +9,20 @@ std::ostream& operator<<(std::ostream& os, const Schedule& sched) {
     os << std::endl;
     for (unsigned int i = 0; i < sched.schedule.size(); ++i) {
         os << "Period " << i + 1 << ": ";
-        const std::vector<AcademicClass>& period = sched.schedule.at(i);
+        const std::vector<AcademicClass*>& period = sched.schedule.at(i);
         for (unsigned int j = 0; j < period.size() - 1; ++j) {
-            os << period.at(j).getName() << ", ";
+            os << period.at(j)->getName() << ", ";
         }
-        os << "and, " << period.at(period.size() - 1).getName() << std::endl;
+        os << "and, " << period.at(period.size() - 1)->getName() << std::endl;
     }
     return os;
 }
 
-Schedule::Schedule(const std::vector<std::vector<AcademicClass>>& initialSchedule) {
+Schedule::Schedule(const std::vector<std::vector<AcademicClass*>>& initialSchedule) {
     schedule = initialSchedule;
 }
 
-std::vector<AcademicClass> Schedule::getClasses(unsigned int period) {
+std::vector<AcademicClass*> Schedule::getClasses(unsigned int period) {
     if (period >= schedule.size()) {
         std::cout << "Error: " << period << " is not a valid period. (There are " << schedule.size() << " )" << std::endl;
     }
@@ -37,7 +37,7 @@ int Schedule::score(const std::vector<StudentPreference>& preferences) {
         for (auto& period : schedule) {
             int collisions = -1;
             for (auto& academicClass : period) {
-                if (pref.contains(academicClass)) {
+                if (pref.contains(*academicClass)) {
                     collisions++;
                 }
             }

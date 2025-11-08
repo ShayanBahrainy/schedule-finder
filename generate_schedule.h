@@ -2,4 +2,4 @@
 #include "Schedule.h"
 
 
-Schedule* generateRandomSchedule(const std::vector<AcademicClass>& classList, unsigned int periodCount);
+Schedule* generateRandomSchedule(const std::vector<AcademicClass*> classList, unsigned int periodCount);

@@ -4,12 +4,8 @@
 #include "AcademicClass.h"
 
 
-StudentPreference::StudentPreference(Student* student, AcademicClass** preferenceList, int numPreferences) {
-    this->numPreferences = numPreferences;
-    this->preferenceList = new AcademicClass*[numPreferences]();
-    for (int i = 0; i < numPreferences; ++i) {
-        this->preferenceList[i] = preferenceList[i];
-    }
+StudentPreference::StudentPreference(Student* student, std::vector<AcademicClass*> preferenceList) {
+    this->preferenceList = preferenceList;
     this->student = student;
 }
 
@@ -17,16 +13,15 @@ Student* StudentPreference::getStudent() const {
     return this->student;
 }
 
-AcademicClass* StudentPreference::getPreference(int num) const {
-    if (num > numPreferences - 1 || num < 0) {
-        std::cout << "Invalid preference number " << num << std::endl;
+AcademicClass* StudentPreference::getPreference(unsigned int i) const {
+    if (i > preferenceList.size() - 1) {
+        std::cout << "Invalid preference index " << i << std::endl;
     }
-    return this->preferenceList[num];
+    return this->preferenceList[i];
 }
 
 bool StudentPreference::contains(const AcademicClass academicClass) const {
-    for (int i = 0; i < numPreferences; ++i) {
-        //std::cout << preferenceList[i]->getName() << " =? " << academicClass.getName() << " ";
+    for (unsigned int i = 0; i < preferenceList.size(); ++i) {
         if (*preferenceList[i] == academicClass) {
             return true;
         }
@@ -36,5 +31,5 @@ bool StudentPreference::contains(const AcademicClass academicClass) const {
 }
 
 int StudentPreference::getPreferenceCount() const {
-    return numPreferences;
+    return preferenceList.size();
 }

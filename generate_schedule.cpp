@@ -6,15 +6,15 @@
 #include "generate_schedule.h"
 
 
-Schedule* generateRandomSchedule(const std::vector<AcademicClass>& classList, unsigned int periodCount) {
+Schedule* generateRandomSchedule(const std::vector<AcademicClass*> classList, unsigned int periodCount) {
 
     if (periodCount > classList.size()) {
         std::cout << "Error: Not enough classes (" << classList.size() << ") to fill " << periodCount << " periods. ";
     }
 
-    std::vector<AcademicClass> availableClasses = classList;
+    std::vector<AcademicClass*> availableClasses = classList;
 
-    std::vector<std::vector<AcademicClass>> init(periodCount);
+    std::vector<std::vector<AcademicClass*>> init(periodCount);
 
     while (availableClasses.size() > 0) {
         for (unsigned int i = 0; i < periodCount; ++i) {
@@ -24,7 +24,7 @@ Schedule* generateRandomSchedule(const std::vector<AcademicClass>& classList, un
 
             int randClass = rand() % availableClasses.size();
 
-            AcademicClass classToAdd = availableClasses.at(randClass);
+            AcademicClass* classToAdd = availableClasses.at(randClass);
 
             availableClasses.erase(availableClasses.begin() + randClass);
 

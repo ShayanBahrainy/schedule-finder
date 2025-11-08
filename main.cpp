@@ -93,13 +93,16 @@ int main() {
     std::vector<StudentPreference> studentPrefs = loadPreferences("Preferences.txt", academicClasses);
 
 
-    Schedule* minSchedule = generateRandomSchedule(academicClasses, 9);
-    int maxScore = std::numeric_limits<int>::max();
-    for (int i = 0; i < 10; ++i) {
-        Schedule* schedule = generateRandomSchedule(academicClasses, 9);
+    Schedule* minSchedule = generateRandomSchedule(academicClasses, 8);
+    int minScore = std::numeric_limits<int>::max();
+    for (int i = 0; i < 100000; ++i) {
+        if (i % 1000 == 0) {
+            std::cout << "Current lowest score: " << minScore << std::endl;
+        }
+        Schedule* schedule = generateRandomSchedule(academicClasses, 8);
         int score = schedule->score(studentPrefs);
-        if (score < maxScore) {
-            maxScore = score;
+        if (score < minScore) {
+            minScore = score;
             minSchedule = schedule;
         }
         else {

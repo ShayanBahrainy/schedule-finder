@@ -1,6 +1,16 @@
+#include <ostream>
+
 #include "AcademicClass.h"
 #include "StudentPreference.h"
-#include <ostream>
+
+
+struct ClassPairWithFrequency {
+    std::vector<AcademicClass*> pair;
+    int frequency;
+    bool operator<(ClassPairWithFrequency& otherPair) {
+        return frequency < otherPair.frequency;
+    }
+};
 
 #pragma once
 class Schedule {
@@ -15,6 +25,7 @@ class Schedule {
 
         friend std::ostream& operator<<(std::ostream& os, const Schedule& sched);
 
+        static std::vector<ClassPairWithFrequency> analyzePreferences(const std::vector<AcademicClass*>& classes, const std::vector<StudentPreference>& preferences);
     private:
         std::vector<std::vector<AcademicClass*>> schedule;
 

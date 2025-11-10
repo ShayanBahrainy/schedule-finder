@@ -92,6 +92,12 @@ int main() {
 
     std::vector<StudentPreference> studentPrefs = loadPreferences("Preferences.txt", academicClasses);
 
+    std::vector<ClassPairWithFrequency> matches = Schedule::analyzePreferences(academicClasses, studentPrefs);
+
+    std::cout << "Here are the pairs of classes with ascending frequency: " << std::endl;
+    for (auto& match : matches) {
+        std::cout << match.pair.at(0)->getName() << " & " << match.pair.at(1)->getName() << " - " << match.frequency << std::endl;
+    }
 
     Schedule* minSchedule = generateRandomSchedule(academicClasses, 8);
     int minScore = std::numeric_limits<int>::max();

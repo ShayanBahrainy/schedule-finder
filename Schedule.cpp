@@ -1,9 +1,12 @@
+#include <utility>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
 
 #include "Schedule.h"
 #include "AcademicClass.h"
 #include "StudentPreference.h"
+#include "Utils.h"
 
 std::ostream& operator<<(std::ostream& os, const Schedule& sched) {
     os << std::endl;
@@ -46,4 +49,40 @@ int Schedule::score(const std::vector<StudentPreference>& preferences) {
     }
 
     return score;
+}
+
+
+
+
+std::vector<ClassPairWithFrequency> Schedule::analyzePreferences(const std::vector<AcademicClass*>& classes, const std::vector<StudentPreference>& preferences) {
+
+    std::unordered_map<AcademicClass*, Counter<AcademicClass*>> connected;
+    for (auto& classPointer : classes) {
+        connected[classPointer] = Counter<AcademicClass*>();
+    }
+
+    for (const StudentPreference& pref : preferences) {
+        for (int i = 0; i < pref.getPreferenceCount(); ++i ) {
+            connected[pref.getPreference(i)].add(pref.preferenceList);
+        }
+    }
+
+    std::vector<std::vector<AcademicClass*>> matches;
+
+
+
+    std::vector<ClassPairWithFrequency> pairs;
+
+    for ( std::pair<AcademicClass*, Counter<AcademicClass*>> pair : connected) {
+        std::vector<ObjectWithFrequency<AcademicClass*>> pairedClasses = pair.second.getSorted();
+
+        for (ObjectWithFrequency<AcademicClass*>& obj : pairedClasses) {
+            pairs.push_back(ClassPairWithFrequency{std::vector<AcademicClass*>{pair.first, obj.t}, obj.frequency});
+        }
+    }
+
+    std::sort(pairs.begin(), pairs.end());
+
+    return pairs;
+
 }

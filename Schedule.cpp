@@ -1,7 +1,10 @@
+#include <unordered_set>
 #include <utility>
 #include <vector>
 #include <iostream>
 #include <unordered_map>
+#include <array>
+#include <algorithm>
 
 #include "Schedule.h"
 #include "AcademicClass.h"
@@ -39,7 +42,7 @@ std::vector<AcademicClass*> Schedule::getClasses(unsigned int period) {
     return schedule.at(period);
 }
 
-int Schedule::score(const std::vector<StudentPreference>& preferences) {
+int Schedule::score(const std::set<StudentPreference>& preferences) {
     int score = 0;
 
     for (auto& pref : preferences) {
@@ -57,10 +60,7 @@ int Schedule::score(const std::vector<StudentPreference>& preferences) {
     return score;
 }
 
-
-
-
-std::vector<ClassPairWithFrequency> Schedule::analyzePreferences(const std::vector<AcademicClass*>& classes, const std::vector<StudentPreference>& preferences) {
+std::vector<ClassPairWithFrequency> Schedule::analyzePreferences(const std::vector<AcademicClass*>& classes, const std::set<StudentPreference>& preferences) {
 
     std::unordered_map<AcademicClass*, Counter<AcademicClass*>> connected;
     for (auto& classPointer : classes) {
@@ -75,20 +75,31 @@ std::vector<ClassPairWithFrequency> Schedule::analyzePreferences(const std::vect
 
     std::vector<std::vector<AcademicClass*>> matches;
 
-
-
-    std::vector<ClassPairWithFrequency> pairs;
+    std::unordered_set<ClassPairWithFrequency, ClassPairWithFrequency::HashFunction> pairs;
 
     for ( std::pair<AcademicClass*, Counter<AcademicClass*>> pair : connected) {
         std::vector<ObjectWithFrequency<AcademicClass*>> pairedClasses = pair.second.getSorted();
 
         for (ObjectWithFrequency<AcademicClass*>& obj : pairedClasses) {
-            pairs.push_back(ClassPairWithFrequency{std::vector<AcademicClass*>{pair.first, obj.t}, obj.frequency});
+            if (obj.t == pair.first) {
+                continue;
+            }
+
+            std::array<AcademicClass*, 2> paired;
+
+            //Some ternaries that will result in a sorted paired
+            paired[0] = pair.first < obj.t ? pair.first : obj.t;
+            paired[1] = obj.t < pair.first ? pair.first : obj.t;
+
+            ClassPairWithFrequency pairWithFreq = ClassPairWithFrequency{paired, obj.frequency};
+            pairs.insert(pairWithFreq);
         }
     }
 
-    std::sort(pairs.begin(), pairs.end());
+    std::vector<ClassPairWithFrequency> sortedPairs(pairs.begin(), pairs.end());
 
-    return pairs;
+    std::sort(sortedPairs.begin(), sortedPairs.end());
+
+    return sortedPairs;
 
 }

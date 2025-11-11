@@ -13,6 +13,12 @@ std::ostream& operator<<(std::ostream& os, const Schedule& sched) {
     for (unsigned int i = 0; i < sched.schedule.size(); ++i) {
         os << "Period " << i + 1 << ": ";
         const std::vector<AcademicClass*>& period = sched.schedule.at(i);
+
+        if (period.size() == 1) {
+            std::cout << period.at(0)->getName() << std::endl;
+            continue;
+        }
+
         for (unsigned int j = 0; j < period.size() - 1; ++j) {
             os << period.at(j)->getName() << ", ";
         }

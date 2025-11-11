@@ -129,7 +129,7 @@ void performSearch(bool smart, const int SEARCH_COUNT, const int PERIOD_COUNT, c
     std::chrono::time_point end_time = std::chrono::high_resolution_clock::now();
 
 
-    std::cout << "Here is a schedule I found: " << *minSchedule << std::endl;
+    std::cout << "Here is a schedule: " << *minSchedule << std::endl;
 
     std::cout << "And it has a score of " << minSchedule->score(studentPrefs) << std::endl;
 
@@ -138,7 +138,7 @@ void performSearch(bool smart, const int SEARCH_COUNT, const int PERIOD_COUNT, c
 
     double rate = SEARCH_COUNT / (double) milliseconds;
 
-    std::cout << "That took me " << (int) (milliseconds/1000 )<< " seconds, that means I computed at a rate of " << rate*1000 << " searches/second " << std::endl;
+    std::cout << "That took " << (int) (milliseconds/1000 )<< " seconds, that means they were computed at a rate of " << rate*1000 << " searches/second " << std::endl;
 
     std::cout << "This was" << (smart ? " " : " not ") << "a smart search" << std::endl;
 

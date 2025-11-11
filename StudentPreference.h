@@ -14,6 +14,7 @@ class StudentPreference {
         AcademicClass* getPreference(unsigned int i) const;
         int getPreferenceCount() const;
         bool contains(const AcademicClass academicClass) const;
+        bool operator<(const StudentPreference& otherPreference) const;
         friend Schedule;
     private:
         std::vector<AcademicClass*> preferenceList;

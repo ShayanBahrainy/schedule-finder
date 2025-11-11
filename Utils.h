@@ -17,6 +17,17 @@ struct ObjectWithFrequency{
     }
 };
 
+template <typename T>
+bool contains(std::vector<T*>& vect, T* object) {
+    for (T* otherObj : vect) {
+        if (otherObj == object) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 
 template <typename T>
 class Counter {

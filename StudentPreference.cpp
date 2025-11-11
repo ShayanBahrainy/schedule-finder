@@ -33,3 +33,7 @@ bool StudentPreference::contains(const AcademicClass academicClass) const {
 int StudentPreference::getPreferenceCount() const {
     return preferenceList.size();
 }
+
+bool StudentPreference::operator<(const StudentPreference& otherPreference) const {
+    return this->student->getName() < otherPreference.student->getName();
+}

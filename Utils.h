@@ -4,7 +4,7 @@
 #include <unordered_map>
 
 template <typename T>
-void removeValFromVector(std::vector<T>& vect, T& object) {
+void removeValFromVector(std::vector<T*>& vect, T* object) {
     vect.erase(std::remove(vect.begin(), vect.end(), object), vect.end());
 };
 

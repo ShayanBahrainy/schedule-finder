@@ -2,11 +2,34 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <iostream>
 
 template <typename T>
 void removeValFromVector(std::vector<T*>& vect, T* object) {
     vect.erase(std::remove(vect.begin(), vect.end(), object), vect.end());
 };
+
+template <typename T>
+void removeValFromVector(std::vector<T>& vect, T object) {
+    vect.erase(std::remove(vect.begin(), vect.end(), object), vect.end());
+};
+
+template <typename T>
+void printVector(std::vector<T>& vect) {
+    for (auto& obj : vect) {
+        std::cout << obj;
+    }
+    std::cout << std::endl;
+
+}
+
+template <typename T>
+void printVector(std::vector<T*>& vect) {
+    for (auto& obj : vect) {
+        std::cout << *obj;
+    }
+    std::cout << std::endl;
+}
 
 template <typename T>
 struct ObjectWithFrequency{

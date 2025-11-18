@@ -42,6 +42,17 @@ Schedule* ScheduleGeneration::generateRandomSchedule(const std::vector<AcademicC
     return schedule;
 }
 
+std::vector<ClassPairWithFrequency> searchForClassPairs(const std::vector<ClassPairWithFrequency>& pairs, const AcademicClass* classPointer) {
+    std::vector<ClassPairWithFrequency> result;
+
+    for (ClassPairWithFrequency pair : pairs) {
+        if (pair.pair[0] == classPointer || pair.pair[1] == classPointer) {
+            result.push_back(pair);
+        }
+    }
+    return result;
+}
+
 
 Schedule* ScheduleGeneration::AnalyzeAndGenerateSchedule(const std::vector<AcademicClass*> classList, unsigned int periodCount, const std::set<StudentPreference>& preferences) {
 
@@ -62,7 +73,6 @@ Schedule* ScheduleGeneration::AnalyzeAndGenerateSchedule(const std::vector<Acade
 
     std::vector<std::vector<AcademicClass*>> init(periodCount);
 
-
     int currentPeriod = 0;
 
     for (ClassPairWithFrequency classPair : analyzedPairs) {
@@ -76,9 +86,9 @@ Schedule* ScheduleGeneration::AnalyzeAndGenerateSchedule(const std::vector<Acade
         init.at(currentPeriod % periodCount).push_back(classPair.pair[0]);
         init.at(currentPeriod % periodCount).push_back(classPair.pair[1]);
 
+
         removeValFromVector(availableClasses, classPair.pair[0]);
         removeValFromVector(availableClasses, classPair.pair[1]);
-
         currentPeriod++;
 
     }

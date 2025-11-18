@@ -130,12 +130,12 @@ void performSearch(bool smart, const int SEARCH_COUNT, const int PERIOD_COUNT, c
             if (i % 100000 == 0) {
                 std::cout << "Current lowest score: " << minScore << std::endl;
             }
+
             Schedule* schedule = new Schedule(*minSchedule);
             schedule->mutate();
 
-
             int r = rand() % 100;
-            while (r < 50) {
+            while (r < 25) {
                 schedule->mutate();
                 r = rand() % 100;
             }
@@ -179,12 +179,6 @@ int main() {
     std::set<StudentPreference> studentPrefs = loadPreferences("Preferences.txt", academicClasses);
 
     std::vector<ClassPairWithFrequency> matches = Schedule::analyzePreferences(academicClasses, studentPrefs);
-
-    /*
-    std::cout << "Here are the pairs of classes with ascending frequency: " << std::endl;
-    for (auto& match : matches) {
-        std::cout << match.pair.at(0)->getName() << " & " << match.pair.at(1)->getName() << " - " << match.frequency << std::endl;
-    }*/
 
     performSearch(false, SEARCH_COUNT, PERIOD_COUNT, academicClasses, studentPrefs);
     std::cout << std::setw(25) << std::setfill('-') << "" << std::endl;

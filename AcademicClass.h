@@ -1,3 +1,4 @@
+#include <ostream>
 #include <string>
 #include <vector>
 
@@ -13,3 +14,5 @@ class AcademicClass {
         std::string className;
         std::vector<Student*> requiredStudents; //List of students that must be in this class
 };
+
+std::ostream& operator<<(std::ostream& os, const AcademicClass& cls);

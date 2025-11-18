@@ -14,3 +14,9 @@ bool AcademicClass::operator==(AcademicClass otherClass) const {
     }
     return false;
 }
+
+std::ostream& operator<<(std::ostream& os, const AcademicClass& cls) {
+    os << cls.getName();
+    return os;
+}
+

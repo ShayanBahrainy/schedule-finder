@@ -5,6 +5,7 @@
 #include <vector>
 #include <chrono>
 #include <set>
+#include <iomanip>
 
 #include "AcademicClass.h"
 #include "StudentPreference.h"
@@ -104,11 +105,9 @@ void performSearch(bool smart, const int SEARCH_COUNT, const int PERIOD_COUNT, c
     std::chrono::time_point start_time = std::chrono::high_resolution_clock::now();
 
     for (int i = 0; i < SEARCH_COUNT; ++i) {
-        /*
-        if (i % 1000 == 0) {
+        if (i % 100000 == 0) {
             std::cout << "Current lowest score: " << minScore << std::endl;
         }
-        */
         Schedule* schedule;
         if (smart) {
             schedule = ScheduleGeneration::AnalyzeAndGenerateSchedule(academicClasses, PERIOD_COUNT, studentPrefs);
@@ -123,6 +122,32 @@ void performSearch(bool smart, const int SEARCH_COUNT, const int PERIOD_COUNT, c
         }
         else {
             delete schedule;
+        }
+    }
+    if (smart) {
+        //Check some mutations
+        for (int i = 0; i < SEARCH_COUNT; ++i) {
+            if (i % 100000 == 0) {
+                std::cout << "Current lowest score: " << minScore << std::endl;
+            }
+            Schedule* schedule = new Schedule(*minSchedule);
+            schedule->mutate();
+
+
+            int r = rand() % 100;
+            while (r < 50) {
+                schedule->mutate();
+                r = rand() % 100;
+            }
+
+            int score = schedule->score(studentPrefs);
+            if (score < minScore) {
+                minScore = score;
+                minSchedule = schedule;
+            }
+            else {
+                delete schedule;
+            }
         }
     }
 
@@ -145,22 +170,24 @@ void performSearch(bool smart, const int SEARCH_COUNT, const int PERIOD_COUNT, c
 }
 
 int main() {
-    const int SEARCH_COUNT = 100;
+    const int SEARCH_COUNT = 100000;
     const int PERIOD_COUNT = 8;
 
     srand(time(nullptr));
-    std::vector<AcademicClass*> academicClasses = loadClasses("Classes.txt");
+    std::vector<AcademicClass*> academicClasses = loadClasses("ClassesShort.txt");
 
     std::set<StudentPreference> studentPrefs = loadPreferences("Preferences.txt", academicClasses);
 
     std::vector<ClassPairWithFrequency> matches = Schedule::analyzePreferences(academicClasses, studentPrefs);
 
+    /*
     std::cout << "Here are the pairs of classes with ascending frequency: " << std::endl;
     for (auto& match : matches) {
         std::cout << match.pair.at(0)->getName() << " & " << match.pair.at(1)->getName() << " - " << match.frequency << std::endl;
-    }
+    }*/
 
     performSearch(false, SEARCH_COUNT, PERIOD_COUNT, academicClasses, studentPrefs);
+    std::cout << std::setw(25) << std::setfill('-') << "" << std::endl;
     performSearch(true, SEARCH_COUNT, PERIOD_COUNT, academicClasses, studentPrefs);
 
 }

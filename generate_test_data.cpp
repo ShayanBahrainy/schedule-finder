@@ -77,13 +77,29 @@ int main() {
     std::cout << "How many students are in the class: ";
     std::cin >> numStudents;
 
-    std::vector<std::string> students = generateStudents("Students.txt", numStudents);
+    //Throwaway newline
+    std::string throwaway;
+    std::getline(std::cin, throwaway);
+
+    std::string studentInputPath;
+    std::cout << "Where are the students stored: ";
+
+    std::getline(std::cin, studentInputPath);
+
+    std::vector<std::string> students = generateStudents(studentInputPath, numStudents);
 
     int classesPerStudent;
     std::cout << "How many classes does each student want to take: ";
     std::cin >> classesPerStudent;
 
-    std::vector<std::string> possibleClasses = loadClasses("Classes.txt");
+    std::getline(std::cin, throwaway);
+
+    std::string classesInputPath;
+    std::cout << "Where are the classes stored: ";
+
+    std::getline(std::cin, classesInputPath);
+
+    std::vector<std::string> possibleClasses = loadClasses(classesInputPath);
 
     if (classesPerStudent > possibleClasses.size()) {
         std::cout << "Error! There aren't " << classesPerStudent << " classes for people to take!" << std::endl;
@@ -106,7 +122,7 @@ int main() {
             possibleClasses.erase(possibleClasses.begin() + i);
         }
         outputFile << std::endl;
-        possibleClasses = loadClasses("Classes.txt");
+        possibleClasses = loadClasses(classesInputPath);
     }
 
     outputFile.close();

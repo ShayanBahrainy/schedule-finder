@@ -35,6 +35,7 @@ class Schedule {
 
         std::vector<AcademicClass*> getClasses(unsigned int period);
 
+        void mutate();
 
         int score(const std::set<StudentPreference>& preferences);
 

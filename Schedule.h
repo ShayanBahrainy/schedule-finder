@@ -31,6 +31,8 @@ class Schedule {
     public:
         Schedule(const std::vector<std::vector<AcademicClass*>>& initialSchedule);
 
+        Schedule(const Schedule& other);
+
         std::vector<AcademicClass*> getClasses(unsigned int period);
 
 

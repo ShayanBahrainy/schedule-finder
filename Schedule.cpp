@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -5,6 +6,7 @@
 #include <unordered_map>
 #include <array>
 #include <algorithm>
+#include <cstdlib>
 
 #include "Schedule.h"
 #include "AcademicClass.h"
@@ -19,6 +21,11 @@ std::ostream& operator<<(std::ostream& os, const Schedule& sched) {
 
         if (period.size() == 1) {
             std::cout << period.at(0)->getName() << std::endl;
+            continue;
+        }
+
+        if (period.size() == 0) {
+            std::cout << std::endl;
             continue;
         }
 
@@ -40,6 +47,31 @@ std::vector<AcademicClass*> Schedule::getClasses(unsigned int period) {
     }
 
     return schedule.at(period);
+}
+
+Schedule::Schedule(const Schedule& other) {
+    schedule = std::vector<std::vector<AcademicClass*>>(other.schedule.size());
+
+    for (size_t i = 0; i < schedule.size(); ++i) {
+        for (size_t j = 0; j < other.schedule.at(i).size(); ++j) {
+            schedule.at(i).push_back(other.schedule.at(i).at(j));
+        }
+    }
+}
+
+void Schedule::mutate() {
+    int period = rand() % schedule.size();
+    while (schedule.at(period).size() == 0) {
+        period = rand() % schedule.size();
+    }
+
+    int classIndex = rand() % schedule.at(period).size();
+
+    AcademicClass* classPointer = schedule.at(period).at(classIndex);
+
+    schedule.at(period).erase(schedule.at(period).begin() + classIndex);
+
+    schedule.at((period + 1) % schedule.size()).push_back(classPointer);
 }
 
 int Schedule::score(const std::set<StudentPreference>& preferences) {

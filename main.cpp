@@ -174,7 +174,7 @@ int main() {
     const int PERIOD_COUNT = 8;
 
     srand(time(nullptr));
-    std::vector<AcademicClass*> academicClasses = loadClasses("ClassesShort.txt");
+    std::vector<AcademicClass*> academicClasses = loadClasses("ClassesLong.txt");
 
     std::set<StudentPreference> studentPrefs = loadPreferences("Preferences.txt", academicClasses);
 

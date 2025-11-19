@@ -71,7 +71,9 @@ void Schedule::mutate() {
 
     schedule.at(period).erase(schedule.at(period).begin() + classIndex);
 
-    schedule.at((period + 1) % schedule.size()).push_back(classPointer);
+    int periodTo = rand() % schedule.size();
+
+    schedule.at(periodTo).push_back(classPointer);
 }
 
 int Schedule::score(const std::set<StudentPreference>& preferences) {

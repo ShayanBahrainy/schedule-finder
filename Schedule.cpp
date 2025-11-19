@@ -101,16 +101,18 @@ bool isAvailable(const AcademicClass*& classPointer, const std::vector<AcademicC
     return false;
 }
 
-Schedule* Schedule::breed(const Schedule& otherSchedule, std::vector<AcademicClass*> availableClasses) {
-    if (schedule.size() != otherSchedule.schedule.size()) {
+Schedule* Schedule::breed(const Schedule* otherSchedule, std::vector<AcademicClass*> availableClasses) {
+    if (schedule.size() != otherSchedule->schedule.size()) {
         std::cout << "Error! Attempt to breed schedules with different period counts " << std::endl;
     }
 
     std::vector<std::vector<AcademicClass*>> init(schedule.size());
 
-    int periodNum = 0;
-    while (periodNum < init.size()) {
-        for (int i = 0; i < schedule.size(); ++i) {
+    size_t periodNum = 0;
+    int attempts = 0;
+    while (periodNum < init.size() && attempts < 20) {
+        attempts++;
+        for (size_t i = 0; i < schedule.size(); ++i) {
             bool allAvailable = true;
             for (const AcademicClass* classPointer : schedule.at(i)) {
                 if (!isAvailable(classPointer, availableClasses))  {
@@ -125,16 +127,16 @@ Schedule* Schedule::breed(const Schedule& otherSchedule, std::vector<AcademicCla
                 }
 
                 //Put this period into the schedule
-                init.at(periodNum).insert(init.at(i).begin(), schedule.at(i).begin(), schedule.at(i).end());
+                init.at(periodNum).insert(init.at(periodNum).begin(), schedule.at(i).begin(), schedule.at(i).end());
 
                 periodNum++;
                 break;
             }
         }
 
-        for (int i = 0; i < otherSchedule.schedule.size(); ++i) {
+        for (size_t i = 0; i < otherSchedule->schedule.size(); ++i) {
             bool allAvailable = true;
-            for (const AcademicClass* classPointer : otherSchedule.schedule.at(i)) {
+            for (const AcademicClass* classPointer : otherSchedule->schedule.at(i)) {
                 if (!isAvailable(classPointer, availableClasses))  {
                     allAvailable = false;
                     break;
@@ -142,12 +144,12 @@ Schedule* Schedule::breed(const Schedule& otherSchedule, std::vector<AcademicCla
             }
 
             if (allAvailable) {
-                for (AcademicClass* classPointer : otherSchedule.schedule.at(i)) {
+                for (AcademicClass* classPointer : otherSchedule->schedule.at(i)) {
                     removeValFromVector(availableClasses, classPointer);
                 }
 
                 //Put this period into the schedule
-                init.at(periodNum).insert(init.at(i).begin(), otherSchedule.schedule.at(i).begin(), otherSchedule.schedule.at(i).end());
+                init.at(periodNum).insert(init.at(periodNum).begin(), otherSchedule->schedule.at(i).begin(), otherSchedule->schedule.at(i).end());
 
                 periodNum++;
                 break;
@@ -155,7 +157,7 @@ Schedule* Schedule::breed(const Schedule& otherSchedule, std::vector<AcademicCla
         }
     }
 
-    for (int i = 0; i < availableClasses.size(); ++i) {
+    for (size_t i = 0; i < availableClasses.size(); ++i) {
         init.at(periodNum % init.size()).push_back(availableClasses.at(i));
         availableClasses.erase(availableClasses.begin() + i);
 

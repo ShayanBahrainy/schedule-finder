@@ -81,7 +81,7 @@ int Schedule::score(const std::set<StudentPreference>& preferences) {
         for (auto& period : schedule) {
             int collisions = -1;
             for (auto& academicClass : period) {
-                if (pref.contains(*academicClass)) {
+                if (pref.contains(academicClass)) {
                     collisions++;
                 }
             }

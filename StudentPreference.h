@@ -13,7 +13,7 @@ class StudentPreference {
         Student* getStudent() const;
         AcademicClass* getPreference(unsigned int i) const;
         int getPreferenceCount() const;
-        bool contains(const AcademicClass academicClass) const;
+        bool contains(const AcademicClass* academicClass) const;
         bool operator<(const StudentPreference& otherPreference) const;
         friend Schedule;
     private:

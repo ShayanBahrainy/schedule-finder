@@ -20,9 +20,9 @@ AcademicClass* StudentPreference::getPreference(unsigned int i) const {
     return this->preferenceList[i];
 }
 
-bool StudentPreference::contains(const AcademicClass academicClass) const {
+bool StudentPreference::contains(const AcademicClass* academicClass) const {
     for (unsigned int i = 0; i < preferenceList.size(); ++i) {
-        if (*preferenceList[i] == academicClass) {
+        if (*preferenceList[i] == *academicClass) {
             return true;
         }
     }

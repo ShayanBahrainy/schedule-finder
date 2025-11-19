@@ -39,7 +39,7 @@ class Schedule {
 
         int score(const std::set<StudentPreference>& preferences);
 
-        Schedule* breed(const Schedule& otherSchedule, std::vector<AcademicClass*> availableClasses);
+        Schedule* breed(const Schedule* otherSchedule, std::vector<AcademicClass*> availableClasses);
 
         static std::vector<ClassPairWithFrequency> analyzePreferences(const std::vector<AcademicClass*>& classes, const std::set<StudentPreference>& preferences);
 

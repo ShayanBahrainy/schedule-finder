@@ -94,6 +94,81 @@ int Schedule::score(const std::set<StudentPreference>& preferences) {
     return score;
 }
 
+bool isAvailable(const AcademicClass*& classPointer, const std::vector<AcademicClass*>& availableClasses) {
+    for (AcademicClass* p : availableClasses) {
+        if (classPointer == p) return true;
+    }
+    return false;
+}
+
+Schedule* Schedule::breed(const Schedule& otherSchedule, std::vector<AcademicClass*> availableClasses) {
+    if (schedule.size() != otherSchedule.schedule.size()) {
+        std::cout << "Error! Attempt to breed schedules with different period counts " << std::endl;
+    }
+
+    std::vector<std::vector<AcademicClass*>> init(schedule.size());
+
+    int periodNum = 0;
+    while (periodNum < init.size()) {
+        for (int i = 0; i < schedule.size(); ++i) {
+            bool allAvailable = true;
+            for (const AcademicClass* classPointer : schedule.at(i)) {
+                if (!isAvailable(classPointer, availableClasses))  {
+                    allAvailable = false;
+                    break;
+                }
+            }
+
+            if (allAvailable) {
+                for (AcademicClass* classPointer : schedule.at(i)) {
+                    removeValFromVector(availableClasses, classPointer);
+                }
+
+                //Put this period into the schedule
+                init.at(periodNum).insert(init.at(i).begin(), schedule.at(i).begin(), schedule.at(i).end());
+
+                periodNum++;
+                break;
+            }
+        }
+
+        for (int i = 0; i < otherSchedule.schedule.size(); ++i) {
+            bool allAvailable = true;
+            for (const AcademicClass* classPointer : otherSchedule.schedule.at(i)) {
+                if (!isAvailable(classPointer, availableClasses))  {
+                    allAvailable = false;
+                    break;
+                }
+            }
+
+            if (allAvailable) {
+                for (AcademicClass* classPointer : otherSchedule.schedule.at(i)) {
+                    removeValFromVector(availableClasses, classPointer);
+                }
+
+                //Put this period into the schedule
+                init.at(periodNum).insert(init.at(i).begin(), otherSchedule.schedule.at(i).begin(), otherSchedule.schedule.at(i).end());
+
+                periodNum++;
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < availableClasses.size(); ++i) {
+        init.at(periodNum % init.size()).push_back(availableClasses.at(i));
+        availableClasses.erase(availableClasses.begin() + i);
+
+        periodNum++;
+    }
+
+
+    Schedule* child = new Schedule(init);
+
+    return child;
+}
+
+
 std::vector<ClassPairWithFrequency> Schedule::analyzePreferences(const std::vector<AcademicClass*>& classes, const std::set<StudentPreference>& preferences) {
 
     std::unordered_map<AcademicClass*, Counter<AcademicClass*>> connected;

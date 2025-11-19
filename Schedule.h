@@ -39,9 +39,12 @@ class Schedule {
 
         int score(const std::set<StudentPreference>& preferences);
 
-        friend std::ostream& operator<<(std::ostream& os, const Schedule& sched);
+        Schedule* breed(const Schedule& otherSchedule, std::vector<AcademicClass*> availableClasses);
 
         static std::vector<ClassPairWithFrequency> analyzePreferences(const std::vector<AcademicClass*>& classes, const std::set<StudentPreference>& preferences);
+
+        friend std::ostream& operator<<(std::ostream& os, const Schedule& sched);
+
     private:
         std::vector<std::vector<AcademicClass*>> schedule;
 

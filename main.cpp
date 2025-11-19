@@ -92,7 +92,7 @@ std::set<StudentPreference> loadPreferences(const std::string path, std::vector<
 
 
 int main() {
-    const int SEARCH_COUNT = 100000;
+    const int SEARCH_COUNT = 10000;
     const int PERIOD_COUNT = 8;
 
     srand(time(nullptr));
@@ -102,10 +102,9 @@ int main() {
 
     std::vector<ClassPairWithFrequency> matches = Schedule::analyzePreferences(academicClasses, studentPrefs);
 
-
     performSearch(false, SEARCH_COUNT, PERIOD_COUNT, academicClasses, studentPrefs);
     std::cout << std::setw(25) << std::setfill('-') << "" << std::endl;
 
-    performGeneticSearch(8, academicClasses, studentPrefs);
+    performGeneticSearch(PERIOD_COUNT, academicClasses, studentPrefs);
 
 }
